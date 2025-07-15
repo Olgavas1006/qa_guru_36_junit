@@ -1,15 +1,13 @@
-package tests;
+
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Tag;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
-import org.junit.jupiter.params.provider.ValueSource;
+import org.junit.jupiter.params.provider.*;
 
 import java.util.stream.Stream;
 
 import static com.codeborne.selenide.CollectionCondition.sizeGreaterThan;
-import static com.codeborne.selenide.Condition.text;
+import static com.codeborne.selenide.Condition.*;
 import static com.codeborne.selenide.Selenide.*;
 
 public class WildberriesSearchProductTest {
@@ -47,4 +45,22 @@ public class WildberriesSearchProductTest {
                 Arguments.of("lbdfy", "Диван")
         );
     }
+
+
+    @ParameterizedTest(name = "Поиск {0} должен возвращать результаты")
+    @CsvSource({
+            "футболка мужская, Футболка мужская",
+            "футболка женская, Футболка женская",
+            "футболка детская, Футболка детская"
+    })
+    void testTShirtSearchByType(String searchQuery, String expectedResult) {
+
+        $("#searchInput")
+                .setValue(searchQuery)
+                .pressEnter();
+        $(".searching-results__title")
+                .shouldHave(text(expectedResult));
+
+    }
+
 }
